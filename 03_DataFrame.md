@@ -121,5 +121,6 @@ root
 **WARNING**: printSchema is bs as you can see. It does not recognize properly the type of the data so we need to change it manually.
 
 
+# Explore and Manipulate DataFrame
 
 
