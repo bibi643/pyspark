@@ -75,3 +75,59 @@ miserables_flat.take(10)
 # Map Reduce
 
 Using miserables_flat, let's count the number of occurences of each words.
+```python
+# création d'un RDD contenant l'ensemble des couples (mot, nb_occurences) 
+mots = miserables_flat.map(lambda x : (x,1)) \
+                      .reduceByKey(lambda x,y : x + y)
+```
+
+
+```python
+### Première méthode de tri
+
+# Tri en utilisant la fonction 'sorted' des RDD
+mots_sorted  = sorted(mots.collect(),
+                     key= lambda x: x[1],
+                     reverse= 0)
+
+### Deuxième méthode de tri
+
+# Tri en utilisant la fonction 'sortBy' des RDD puis convertir en liste en utilisant collect
+mots_sorted_2 = mots.sortBy(lambda couple: couple[1], ascending = True) \
+                    .collect()
+```
+
+
+
+# method combo
+We can combine all those method in one
+
+```python
+
+# Création d'une liste à partir du fichier texte
+mots_sorted_3 = sc.textFile("miserables_full.txt") \
+                  .map(lambda x : x.lower().replace(',', ' ').replace('.', ' ').replace('-', ' ').replace('’', ' ')) \
+                  .flatMap(lambda line: line.split(" ")) \
+                  .map(lambda x : (x,1)) \
+                  .reduceByKey(lambda x,y : x + y) \
+                  .sortBy(lambda couple: couple[1], ascending = True) \
+                  .collect()
+                
+mots_sorted_3
+
+>>>
+[('hériter', 1),
+ ('galanteries', 1),
+ ('décimées', 1),
+ ('traquées', 1),
+ ('ébranleraient', 1),
+ ('1804', 1),
+ ('brignolles', 1),
+ ('palabres', 1),
+ ('racontages', 1)...
+```
+
+
+# Close SparkContext
+
+**sc.stop()**
