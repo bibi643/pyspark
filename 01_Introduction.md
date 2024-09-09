@@ -160,3 +160,105 @@ hist
  ('KOA', 45)]
 ```
 
+# Sort and Filter a RDD
+
+We will sort the list by the value to have a better idea which aiport has more flights, using **sorted(list= list_to_sort, keys = list_to_use_as_ref_to_sort, reverse = 0 or 1)
+ex:
+**sorted(hist_rdd.collect(), key=lambda x: x[0])** -> sorts the airpots by alphabetic order.
+
+```python
+sorted(hist,keys=lambda x:x[1], reverse = 1)
+```
+
+We can also filter a rdd using filter. Now we will count by airport the number of flights cancelled.
+- filter
+- map and reduced by keys
+- sort
+
+```python
+cancelled_rdd= airplane_rdd \
+    .filter(lambda x:x[10]=='1') \
+    .map(lambda line: (line[8],1)) \
+    .reduceByKey(lambda x,y :x+y) \
+    .collect()
+
+
+
+sorted(cancelled_rdd,
+      key=lambda x:x[1],
+      reverse=1)
+>>>
+​
+
+sorted(cancelled_rdd,
+
+      key=lambda x:x[1],
+
+      reverse=1)
+
+[('SEA', 647),
+ ('ANC', 334),
+ ('PDX', 162),
+ ('OAK', 90),
+ ('SNA', 77),
+ ('JNU', 67),
+ ('LAX', 64),
+ ('SFO', 58),
+ ('FAI', 52),
+ ('SJC', 48),
+ ('ADQ', 39),
+ ('KTN', 36),
+ ('LAS', 31),
+ ('SIT', 29),
+ ('GEG', 28),
+ ('SAN', 28),
+ ('OTZ', 27),
+ ('OME', 27),
+ ('WRG', 26),
+ ('BET', 26),
+ ('PSG', 23),
+ ('SMF', 21),
+ ('YAK', 20),
+ ('DEN', 18),
+ ('PHX', 18),
+ ('ORD', 15),
+ ('PSP', 14),
+ ('BUR', 14),
+ ('ONT', 10),
+ ('LGB', 10),
+ ('CDV', 10),
+ ('ADK', 10),
+ ('SCC', 9),
+ ('BRW', 9),
+ ('DFW', 7),
+ ('MCO', 6),
+ ('EWR', 5),
+ ('BOS', 4),
+ ('DLG', 4),
+ ('AKN', 2),
+ ('GST', 2),
+ ('MIA', 2),
+ ('MSP', 2),
+ ('DCA', 2),
+ ('BOI', 1),
+ ('TUS', 1),
+ ('LIH', 1),
+ ('KOA', 1),
+ ('HNL', 1),
+ ('OGG', 1)]
+```
+
+
+
+> **General Syntax**
+>    Easier to read
+    rdd \
+      .filter(fun1) \
+      .map(fun2) \
+      .reduceByKey(fun3) \
+      .collect()
+
+
+# Close SparkContext
+
+**sc.stop()**
